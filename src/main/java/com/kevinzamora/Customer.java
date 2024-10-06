@@ -59,4 +59,13 @@ public class Customer {
         this.email = email;
         this.edad = edad;
     }
+
+    @Override
+    public String toString() {
+        return "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", email='" + email + '\'' +
+                ", edad=" + edad;
+    }
 }
