@@ -3,17 +3,17 @@ package com.kevinzamora;
 // 1. Crear la clase Customer
 public class Customer {
 
-    private int id;
+    private Long id;
     private String nombre;
     private String apellido;
     private String email;
     private int edad;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -52,7 +52,7 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(int id, String nombre, String apellido, String email, int edad) {
+    public Customer(Long id, String nombre, String apellido, String email, int edad) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;

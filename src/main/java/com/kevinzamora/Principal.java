@@ -1,6 +1,6 @@
 package com.kevinzamora;
 
-import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Principal {
@@ -11,21 +11,25 @@ public class Principal {
     funciones/métodos, creados para gestionar los diferentes clientes/usuarios de nuestra
     aplicación */
 
-    CustomersMethods customerMethodsObj = new CustomersMethods();
+    CustomersRepo customerMethodsObj = new CustomersRepo();
 
     // imprimir menu
+    String menu = """
+                ADMINISTRAR CLIENTES
+                NUESTRAS OPCIONES SON:
+                1. Registrar un nuevo cliente.
+                2. Ver listado de clientes registrados.
+                3. Obtener los datos de un cliente concreto.
+                4. Actualizar cliente.
+                5. Eliminar cliente.
+                6. Salir
+                """;
     // Estructura de nuestro menú principal imprimido por pantalla
     public void loadMainMenu() {
 
         System.out.println("BIENVENID@S A NUESTRO BANCO: \n");
         customerMethodsObj.inicializarBD();
-        System.out.println("ADMINISTRAR CLIENTES \n NUESTRAS OPCIONES SON: \n "
-                + "1. Registrar un nuevo cliente. \n "
-                + "2. Ver listado de clientes registrados. \n "
-                + "3. Obtener los datos de un cliente concreto. \n "
-                + "4. Actualizar cliente. \n "
-                + "5. Eliminar cliente. \n "
-                + "6. Salir \n");
+        System.out.println(menu);
 
         // Método de entrada para seleccionar la opción deseada
         System.out.println("SELECCIONA UNA OPCIÓN (Introduce un nº entero):");
@@ -34,37 +38,44 @@ public class Principal {
 
         // Conmutador/Switch necesario para realizar la selección de la opción deseada
         // En cada opción se procede a llamar la función necesaria mediante 'bancoObj.' y nombre función + ()
+        String nombreIntroducido = ""; String apellidoIntroducido = "";
+        String emailIntroducido = ""; int edadIntroducida = 0;
         switch (opcion) {
             case 1:
                 System.out.println("INTRODUCIR DATOS DE UN NUEVO CLIENTE: \n ");
-                System.out.println("Inserta su nombre (Texto): \n ");
-                String nombreIntroducido = scanner.nextLine();
-                System.out.println("Inserta su apellido (Texto): \n ");
-                String apellidoIntroducido = scanner.nextLine();
-                System.out.println("Introduce su 'email' (Texto): \n ");
-                String emailIntroducido = scanner.nextLine();
-                System.out.println("Introduce su edad (Nº Entero): \n ");
-                int edadIntroducida = scanner.nextInt();
+                try {
+                    System.out.println("Inserta su nombre (Texto): \n ");
+                    nombreIntroducido = scanner.nextLine();
+                    System.out.println("Inserta su apellido (Texto): \n ");
+                    apellidoIntroducido = scanner.nextLine();
+                    System.out.println("Introduce su 'email' (Texto): \n ");
+                    emailIntroducido = scanner.nextLine();
+                    System.out.println("Introduce su edad (Nº Entero): \n ");
+                    edadIntroducida = Integer.parseInt(scanner.nextLine());
+                } catch (Exception e) {
+                    System.out.println("Se ha introducido algún dato erroneo.");
+                }
                 customerMethodsObj.crearNuevoCliente(nombreIntroducido, apellidoIntroducido, emailIntroducido, edadIntroducida);
                 loadMainMenu();
                 break;
             case 2:
                 System.out.println("LISTA DE CLIENTES REGISTRADOS EN NUESTRA APLICACIÓN:");
-                customerMethodsObj.imprimirListaClientes();
+                customerMethodsObj.encontrarListaClientes();
                 loadMainMenu();
                 break;
             case 3:
                 System.out.println("MOSTRAR DATOS DEL CLIENTE");
                 System.out.println("Introduce el número de ID del cliente a buscar: \n ");
-                int idClienteIntroducido = scanner.nextInt();
+                int idClienteIntroducido = Integer.parseInt(scanner.nextLine());
                 customerMethodsObj.mostrarDatosCliente(idClienteIntroducido);
                 loadMainMenu();
                 break;
             case 4:
                 System.out.println("ACTUALIZAR CLIENTE");
                 System.out.println("Introduzca el número de ID del cliente a actualizar (Nº Entero): \n ");
-                int idClienteIntroducido1 = scanner.nextInt();
-                if (customerMethodsObj.existeElCliente(idClienteIntroducido1)) {
+                Long idClienteIntroducido1 = Long.valueOf(scanner.nextLine());
+                Optional<Customer> cliente = customerMethodsObj.encontrarClientePorId(idClienteIntroducido1);
+                if (cliente.isPresent()) {
                     System.out.println("Introduce su nuevo nombre: \n ");
                     String nombreIntroducido1 = scanner.nextLine();
                     System.out.println("Introduce su nuevo apellido: \n ");
@@ -72,7 +83,7 @@ public class Principal {
                     System.out.println("Introduce su nuevo 'email': \n ");
                     String emailIntroducido1 = scanner.nextLine();
                     System.out.println("Introduce su edad actual (Nº Entero): \n ");
-                    int edadActual = scanner.nextInt();
+                    int edadActual = Integer.parseInt(scanner.nextLine());
 
                     customerMethodsObj.actualizarDatosCliente(idClienteIntroducido1, nombreIntroducido1, apellidoIntroducido1,
                             emailIntroducido1, edadActual);
@@ -82,7 +93,7 @@ public class Principal {
             case 5:
                 System.out.println("ELIMINAR CLIENTE");
                 System.out.println("Introduce el número ID del cliente (Nº Entero): \n ");
-                int idClienteEliminar = scanner.nextInt();
+                Long idClienteEliminar = Long.valueOf(scanner.nextLine());
                 customerMethodsObj.eliminarCliente(idClienteEliminar);
                 loadMainMenu();
                 break;
