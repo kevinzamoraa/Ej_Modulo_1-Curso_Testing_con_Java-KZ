@@ -29,6 +29,7 @@ import java.util.ArrayList;
         public static void main(String[] args) {
 
             Principal principalObj = new Principal();
+            principalObj.initializeDB();
             // imprimir menu
             principalObj.loadMainMenu();
 
